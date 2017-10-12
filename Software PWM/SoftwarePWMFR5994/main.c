@@ -18,11 +18,11 @@ int main(void) {
     TA0CCR1 = 500;                               //50% duty to start
     TA0CCR0 = 1000;                             //1 kHz signal
 
-    P5IE |=  BIT6;                            // P1.1 interrupt enabled
+    P5IE |=  BIT6;                            // P5.6 interrupt enabled
     P5IES |= BIT6;                            //falling edge
-    P5REN |= BIT6;                            // Enable resistor on SW2 (P1.1)
-    P5OUT |= BIT6;                             //Pull up resistor on P1.1
-    P5IFG &= ~BIT6;                           // P1.1 Interrupt Flag cleared
+    P5REN |= BIT6;                            // Enable resistor on SW2 (P5.6)
+    P5OUT |= BIT6;                             //Pull up resistor on P5.6
+    P5IFG &= ~BIT6;                           // P5.6 Interrupt Flag cleared
 
     P1DIR |= BIT0;       // P1.0 pin output
     P1OUT |= BIT0;      //turn on LED
@@ -35,28 +35,27 @@ int main(void) {
 }
 
 #pragma vector = TIMER0_A0_VECTOR
-__interrupt void Timer0_A0_ISR(void) {
-    P1OUT |= BIT0;
+__interrupt void Timer0_A0_ISR(void) { //timer a0 interrupt
+    P1OUT |= BIT0; //turn on led1.0
 }
 
 #pragma vector = TIMER0_A1_VECTOR
-__interrupt void Timer0_A1_ISR(void) {
+__interrupt void Timer0_A1_ISR(void) { //timer a1 interrupt
     switch(TA0IV){
     case 2://CCR1
-    P1OUT &= ~BIT0;
+    P1OUT &= ~BIT0; //turn off led 1.0
     break;
     }
 }
 
 #pragma vector=PORT5_VECTOR
-__interrupt void Port_5(void) {
-    //P1IE &= ~BIT1;
-        P1OUT ^= BIT1;
-        if(TA0CCR1 >= 1000) {
-            TA0CCR1 = 0;
+__interrupt void Port_5(void) { //button interrupt
+        P1OUT ^= BIT1; //toggle led 1.1
+        if(TA0CCR1 >= 1000) { //check if timer is greater than 1 khz
+            TA0CCR1 = 0; //reset
         }
         else {
-            TA0CCR1 = TA0CCR1 + 100;
+            TA0CCR1 = TA0CCR1 + 100; //increment by 100 hz
         }
-    P5IFG &=~BIT6;
+    P5IFG &=~BIT6; //reset flag
 }

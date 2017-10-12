@@ -26,7 +26,7 @@ int main(void) {
 
     P1DIR |= BIT0;       // P1.0 pin output
     P1OUT |= BIT0;      //turn on LED
-    P9DIR |= BIT7;       // P1.0 pin output
+    P9DIR |= BIT7;       // P9.7 pin output
     P9OUT |= BIT7;
 
     __bis_SR_register(GIE);  //not low power mode
@@ -36,28 +36,27 @@ int main(void) {
 }
 
 #pragma vector = TIMER0_A0_VECTOR
-__interrupt void Timer0_A0_ISR(void) {
-    P1OUT |= BIT0;
+__interrupt void Timer0_A0_ISR(void) { //a0 interrupt
+    P1OUT |= BIT0; //turn on led 1.0
 }
 
 #pragma vector = TIMER0_A1_VECTOR
-__interrupt void Timer0_A1_ISR(void) {
+__interrupt void Timer0_A1_ISR(void) { //a1 interrupt
     switch(TA0IV){
     case 2://CCR1
-    P1OUT &= ~BIT0;
+    P1OUT &= ~BIT0; //turn off led 1.0
     break;
     }
 }
 
 #pragma vector=PORT1_VECTOR
-__interrupt void Port_1(void) {
-    //P1IE &= ~BIT1;
-        P9OUT ^= BIT7;
-        if(TA0CCR1 >= 1000) {
-            TA0CCR1 = 0;
+__interrupt void Port_1(void) { //button interrupt
+        P9OUT ^= BIT7; //toggle led 9.7
+        if(TA0CCR1 >= 1000) { //check if timer has passed 1 khz
+            TA0CCR1 = 0; //reset
         }
         else {
-            TA0CCR1 = TA0CCR1 + 100;
+            TA0CCR1 = TA0CCR1 + 100; //increment by 100 hz
         }
-    P1IFG &=~BIT1;
+    P1IFG &=~BIT1; //reset flag
 }
