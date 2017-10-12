@@ -10,8 +10,8 @@
 int main(void)
 {
     WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
-    PM5CTL0 &= ~LOCKLPM5;
-    P1REN |= BIT1;
+    PM5CTL0 &= ~LOCKLPM5; //disable high impedance mode
+    P1REN |= BIT1; //setup button 1.1
     P1OUT |= BIT1;
     P1DIR |= BIT1;
     P1DIR |= BIT0;

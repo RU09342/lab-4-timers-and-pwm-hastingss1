@@ -11,7 +11,7 @@ int main(void)
 {
     WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
 
-    P1REN |= BIT3;
+    P1REN |= BIT3; //setup button 1.3
     P1OUT |= BIT3;
     P1DIR |= BIT0;
 
