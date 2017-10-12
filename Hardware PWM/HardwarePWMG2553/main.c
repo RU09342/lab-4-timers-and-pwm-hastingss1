@@ -98,12 +98,12 @@ int main(void)
 #pragma vector=PORT1_VECTOR
 __interrupt void Port_1(void) {
     //P1IE &= ~BIT1;
-        if(TA0CCR1 >= 1000) {
-            TA0CCR1 = 0;
+        if(TA0CCR1 >= 1000) { //check if timer has passed 1 khz
+            TA0CCR1 = 0; //reset to 0
         }
         else {
-            TA0CCR1 = TA0CCR1 + 100;
+            TA0CCR1 = TA0CCR1 + 100; //increment timer by 100 hz
         }
-    P1IFG &=~BIT3;
+    P1IFG &=~BIT3; //reset flag
 }
 
